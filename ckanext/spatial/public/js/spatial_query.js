@@ -35,7 +35,6 @@ this.ckan.module('spatial-query', function ($, _) {
           '<div class="modal-body"><div id="draw-map-container"></div></div>',
           '<div class="modal-footer">',
           '<button class="btn btn-default btn-cancel" data-dismiss="modal"></button>',
-          '<button class="btn apply btn-primary disabled"></button>',
           '</div>',
           '</div>',
           '</div>',
@@ -52,7 +51,6 @@ this.ckan.module('spatial-query', function ($, _) {
           '<div class="modal-body"><div id="draw-map-container"></div></div>',
           '<div class="modal-footer">',
           '<button type="button" class="btn btn-secondary btn-cancel" data-bs-dismiss="modal"></button>',
-          '<button type="button" class="btn btn-primary apply disabled"></button>',
           '</div>',
           '</div>',
           '</div>',
@@ -85,12 +83,10 @@ this.ckan.module('spatial-query', function ($, _) {
     _createModal: function () {
       if (!this.modal) {
         var element = this.modal = jQuery(this.template.modal["bootstrap" + this._getBootstrapVersion()]);
-        element.on('click', '.btn-primary', this._onApply);
         element.on('click', '.btn-cancel', this._onCancel);
         element.modal({show: false});
 
         element.find('.modal-title').text(this._('Please draw query extent in the map:'));
-        element.find('.btn-primary').text(this._('Apply'));
         element.find('.btn-cancel').text(this._('Cancel'));
 
         var module = this;
@@ -135,11 +131,10 @@ this.ckan.module('spatial-query', function ($, _) {
             module.extentLayer = extentLayer = e.layer;
             $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
             map.addLayer(extentLayer);
-            element.find('.btn-primary').removeClass('disabled').addClass('btn-primary');
+            module._onApply();
           });
 
           $('a.leaflet-draw-draw-rectangle>span', element).trigger('click');
-          element.find('.btn-primary').focus()
         })
 
         this.modal.on('hidden.bs.modal', function () {
